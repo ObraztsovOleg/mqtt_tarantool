@@ -1,8 +1,8 @@
 TARANTOOL_STORAGE_PATH=/home/user/docker-tarantool-mqtt/data
-MY_TARANTOOL_STORAGE_PATH=/root/hw7/docker-tarantool-mqtt/tarantool
+MY_TARANTOOL_STORAGE_PATH=/home/obrol/mqtt_tarantool/src/tarantool
 
 console:
-	docker run -it --rm tarantool/tarantool:latest -v ${TARANTOOL_STORAGE_PATH}:/home/tarantool/data -p 3301:3301 tarantool
+	docker run -it --rm tarantool/tarantool:latest -v ${MY_TARANTOOL_STORAGE_PATH}:/home/tarantool/data -p 3301:3301 tarantool
 sh:
 	docker run -it --rm --env-file mqtt.env -v ${TARANTOOL_STORAGE_PATH}:/home/tarantool/data -p 3301:3301 mqtt_tarantool/connector sh
 
@@ -36,6 +36,8 @@ fillup:
 	docker run -it --name mqtt_fillup --rm --env-file mqtt.env -v ${MY_TARANTOOL_STORAGE_PATH}:/home/tarantool/data -p 3301:3301 mqtt_tarantool/fillup
 build_analiticalc:
 	docker build -t mqtt_tarantool/analiticalc ./analiticalc
+delete_analiticalc:
+	docker rmi -f mqtt_tarantool/analiticalc:latest
 analiticalc:
 	docker run -it --name mqtt_analiticalc --rm --env-file mqtt.env -v ${MY_TARANTOOL_STORAGE_PATH}:/home/tarantool/data  mqtt_tarantool/analiticalc
 .PHONY: build_print_db print_db fillup create_db analiticalc build_analiticalc

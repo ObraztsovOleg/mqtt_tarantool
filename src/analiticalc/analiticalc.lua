@@ -9,15 +9,23 @@ local function analiticalc()
     local min = s.index.speed:min()[4]
 
     local median = 0
-    for _, v in csv.iterate(payload, {delimiter = ',  '}) do
-            local day  = tonumber(v[1])
-            local tick = tonumber(v[2])
-            local speed = tonumber(v[3])   
-            s:insert{nil, day, tick, speed}
-    end
-    
     local len = s:len()
-    local sorted = s:sort(4)
+    if len % 2 == 0 then
+        median = tonumber(s:select{len / 2}[1][4])
+    elseif len % 2 == 1 then
+        median = tonumber((s:select{len / 2 - 1}[1][4]) + tonumber(s:select{len / 2 + 1}[1][4]) / 2)
+    end
+
+    local quntile_pos = (len + 1) * 3.0/4
+    local quantile_int = math.floor(quntile_pos)
+    local cooficient = quntile_pos - quantile_int
+
+    quantile_75 = (tonumber(s:select{quantile_int}[1][4]) + tonumber(s:select{quantile_int + 1}[1][4])) * cooficient
+    
+    print("min: ", min)
+    print("max: ", max)
+    print("Quantile 3:", quantile_75)
+    print("median:", median)
 end
 
 
